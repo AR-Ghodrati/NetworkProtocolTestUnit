@@ -1,0 +1,10 @@
+[2019-08-02 12:01:38.059] [renderer1] [warning] UNRESPONSIVE extension host, 'bestvow.css-compressor' took 100% of 6526.28ms, saved PROFILE here: '/tmp/exthost-680a8e.cpuprofile' [{"id":"bestvow.css-compressor","total":6526088,"percentage":100}]
+[2019-08-02 12:02:02.012] [renderer1] [error] net::ERR_NETWORK_CHANGED: Error: net::ERR_NETWORK_CHANGED
+[2019-08-02 12:02:10.660] [renderer1] [error] Error: [File Watcher (node.js)] Error: ENOENT: no such file or directory, stat '/home/logicalangel/go/src/gsm/.vscode'
+[2019-08-02 12:02:10.661] [renderer1] [error] [File Watcher (node.js)] Error: ENOENT: no such file or directory, stat '/home/logicalangel/go/src/gsm/.vscode'
+[2019-08-02 12:20:42.250] [renderer1] [warning] null
+[2019-08-02 12:51:34.966] [renderer1] [warning] null
+[2019-08-02 12:51:47.789] [renderer1] [warning] null
+[2019-08-02 12:51:51.401] [renderer1] [warning] null
+[2019-08-02 12:52:08.682] [renderer1] [warning] null
+[2019-08-02 12:52:21.786] [renderer1] [warning] null
