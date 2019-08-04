@@ -1,11 +1,11 @@
 package main
 
 import (
+	"../gsm/protocol"
 	"github.com/joho/godotenv"
-	"gsm/protocol"
 )
 
 func main() {
-	godotenv.Load()
-	protocol.StartKCP()
+	_ = godotenv.Load()
+	protocol.StartQUIC()
 }

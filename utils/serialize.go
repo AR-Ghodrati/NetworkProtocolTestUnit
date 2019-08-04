@@ -1,8 +1,8 @@
 package utils
 
 import (
+	"../models"
 	"github.com/vmihailenco/msgpack"
-	"gsm/models"
 )
 
 func Serialize(input models.Message) []byte {
@@ -14,7 +14,7 @@ func Serialize(input models.Message) []byte {
 	return output
 }
 
-func Deserialize(input []byte) models.Message{
+func Deserialize(input []byte) models.Message {
 	var msg models.Message
 	err := msgpack.Unmarshal(input, &msg)
 	if err != nil {

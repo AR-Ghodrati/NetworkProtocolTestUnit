@@ -7,8 +7,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/pem"
-	"io"
-	quic "github.com/lucas-clemente/quic-go"
+	"github.com/lucas-clemente/quic-go"
 	"math/big"
 	"os"
 )
@@ -51,22 +50,22 @@ import (
 //	}
 //}
 
-func StartQUIC(){
+func StartQUIC() {
 	listener, err := quic.ListenAddr(os.Getenv("ENDPOINT"), generateTLSConfig(), nil)
 	if err != nil {
-		return err
+		//	return err
 	}
 	sess, err := listener.Accept(context.Background())
 	if err != nil {
-		return err
+		//return err
 	}
-	stream, err := sess.AcceptStream(context.Background())
+	_, err = sess.AcceptStream(context.Background())
 	if err != nil {
 		panic(err)
 	}
 	// Echo through the loggingWriter
-	_, err = io.Copy(loggingWriter{stream}, stream)
-	return err
+	//_, err = io.Copy(loggingWriter{stream}, stream)
+	//return err
 }
 
 func generateTLSConfig() *tls.Config {
