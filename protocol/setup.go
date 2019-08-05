@@ -1,14 +1,11 @@
 package protocol
 
 import (
-	"context"
-	"crypto/rand"
-	"crypto/rsa"
-	"crypto/tls"
-	"crypto/x509"
-	"encoding/pem"
-	"github.com/lucas-clemente/quic-go"
-	"math/big"
+	"../multiplexer"
+	"crypto/sha1"
+	"github.com/xtaci/kcp-go"
+	"golang.org/x/crypto/pbkdf2"
+	"log"
 	"os"
 )
 
@@ -30,27 +27,27 @@ import (
 //	}
 //}
 
-//func StartKCP(){
-//	key := pbkdf2.Key([]byte("demo pass"), []byte("demo salt"), 1024, 32, sha1.New)
-//	block, _ := kcp.NewAESBlockCrypt(key)
-//	if listener, err := kcp.ListenWithOptions(os.Getenv("ENDPOINT"), block, 10, 3); err == nil {
-//		log.Println("KCP Server:\tSUCCESS")
-//
-//		defer listener.Close()
-//		for {
-//			s, err := listener.AcceptKCP()
-//			log.Println("onAccept")
-//			if err != nil {
-//				log.Fatal(err)
-//			}
-//			go multiplexer.Multiplex(s)
-//		}
-//	} else {
-//		log.Fatal(err)
-//	}
-//}
+func StartKCP() {
+	key := pbkdf2.Key([]byte("demo pass"), []byte("demo salt"), 1024, 32, sha1.New)
+	block, _ := kcp.NewAESBlockCrypt(key)
+	if listener, err := kcp.ListenWithOptions(os.Getenv("ENDPOINT"), block, 10, 3); err == nil {
+		log.Println("KCP Server:\tSUCCESS")
 
-func StartQUIC() {
+		defer listener.Close()
+		for {
+			s, err := listener.AcceptKCP()
+			log.Println("onAccept")
+			if err != nil {
+				log.Fatal(err)
+			}
+			go multiplexer.Multiplex(s)
+		}
+	} else {
+		log.Fatal(err)
+	}
+}
+
+/*func StartQUIC() {
 	listener, err := quic.ListenAddr(os.Getenv("ENDPOINT"), generateTLSConfig(), nil)
 	if err != nil {
 		//	return err
@@ -90,3 +87,4 @@ func generateTLSConfig() *tls.Config {
 		NextProtos:   []string{"quic-echo-example"},
 	}
 }
+*/
