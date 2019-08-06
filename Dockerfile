@@ -8,12 +8,12 @@ RUN apk update && apk add git && go get gopkg.in/natefinch/lumberjack.v2
 RUN mkdir /app
 # We copy everything in the root directory
 # into our /app directory
-ADD . /Users/alirezaghodrati/GoProjects/gsm
+ADD . /app
 
 # We specify that we now wish to execute
 # any further commands inside our /app
 # directory
-WORKDIR /Users/alirezaghodrati/GoProjects/gsm
+WORKDIR /app
 # we run go build to compile the binary
 # executable of our Go program
 
@@ -22,5 +22,6 @@ RUN go get -d -v ./...
 
 RUN go build -o main.go
 
-CMD ["/app/main"]
 EXPOSE 3001
+CMD ["/app/main"]
+
