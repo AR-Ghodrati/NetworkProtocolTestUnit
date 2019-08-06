@@ -8,18 +8,30 @@ import (
 	"time"
 )
 
-const defaultBufferSize = uint(100000)
+const defaultBufferSize = uint(16384)
 
-func Multiplex(conn *kcp.UDPSession) {
+func Multiplex(conn *kcp.UDPSession, count uint64) {
 	buf := make([]byte, defaultBufferSize)
-	lengthR, err := conn.Read(buf)
-	//log.Println(string(buf[:lengthR]))
-	msg := utils.Deserialize(buf[:lengthR])
+	//map [time Diff] = Count
+	var DiffMap = make(map[float64]uint64)
+	defer func() {
+		for diff, Count := range DiffMap {
+			log.Println("With", diff, "Millisecond -> ", "Count is:", Count)
+		}
+	}()
 
-	i := time.Now().Unix()
+	for {
+		lengthR, err := conn.Read(buf)
+		msg := utils.Deserialize(buf[:lengthR])
+		i := time.Now().Unix()
 
-	log.Println("Client Time : ", msg.Milis, " , Server Time : ", i, " , Deff : ", math.Abs(float64(i-msg.Milis)))
-	if err != nil {
-		log.Fatal(err)
+		DiffMap[math.Abs(float64(i-msg.Milis))] = DiffMap[math.Abs(float64(i-msg.Milis))] + 1
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		if msg.SequenceNumber == count-1 {
+			break
+		}
 	}
 }

@@ -27,7 +27,7 @@ import (
 //	}
 //}
 
-func StartKCP() {
+func StartKCP(count uint64) {
 	key := pbkdf2.Key([]byte("demo pass"), []byte("demo salt"), 1024, 32, sha1.New)
 	block, _ := kcp.NewAESBlockCrypt(key)
 	if listener, err := kcp.ListenWithOptions(os.Getenv("ENDPOINT"), block, 10, 3); err == nil {
@@ -36,11 +36,11 @@ func StartKCP() {
 		defer listener.Close()
 		for {
 			s, err := listener.AcceptKCP()
-			log.Println("onAccept")
+			log.Println("onAccept", s.LocalAddr().String())
 			if err != nil {
 				log.Fatal(err)
 			}
-			go multiplexer.Multiplex(s)
+			go multiplexer.Multiplex(s, count)
 		}
 	} else {
 		log.Fatal(err)

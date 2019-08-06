@@ -8,10 +8,16 @@ import (
 	"testing"
 )
 
+const Count = 100
+
 func main() {
 	_ = godotenv.Load()
-	go protocol.StartKCP()
-	Client.Run()
+
+	go Client.Run(Count)
+	//go Client.Run(Count)
+	//go Client.Run(Count)
+
+	protocol.StartKCP(Count)
 
 }
 
