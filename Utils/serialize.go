@@ -1,11 +1,11 @@
-package utils
+package Utils
 
 import (
-	"../models"
+	"../Models"
 	"github.com/vmihailenco/msgpack"
 )
 
-func Serialize(input models.Message) []byte {
+func Serialize(input Models.Message) []byte {
 	output, err := msgpack.Marshal(input)
 	if err != nil {
 		panic(err)
@@ -14,8 +14,8 @@ func Serialize(input models.Message) []byte {
 	return output
 }
 
-func Deserialize(input []byte) models.Message {
-	var msg models.Message
+func Deserialize(input []byte) Models.Message {
+	var msg Models.Message
 	err := msgpack.Unmarshal(input, &msg)
 	if err != nil {
 		panic(err)

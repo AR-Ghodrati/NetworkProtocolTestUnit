@@ -1,12 +1,11 @@
-package protocol
+package Server
 
 import (
-	"../multiplexer"
+	"../../Multiplexer"
 	"crypto/sha1"
 	"github.com/xtaci/kcp-go"
 	"golang.org/x/crypto/pbkdf2"
 	"log"
-	"os"
 )
 
 //func Start() {
@@ -23,24 +22,25 @@ import (
 //	defer conn.Close()
 //
 //	for{
-//	 	go multiplexer.Multiplex(conn)
+//	 	go Multiplexer.Multiplex(conn)
 //	}
 //}
 
 func StartKCP(count uint64) {
 	key := pbkdf2.Key([]byte("demo pass"), []byte("demo salt"), 1024, 32, sha1.New)
 	block, _ := kcp.NewAESBlockCrypt(key)
-	if listener, err := kcp.ListenWithOptions(os.Getenv("ENDPOINT"), block, 10, 3); err == nil {
+	if listener, err := kcp.ListenWithOptions(":3001", block, 10, 3); err == nil {
 		log.Println("KCP Server:\tSUCCESS")
 
 		defer listener.Close()
 		for {
 			s, err := listener.AcceptKCP()
 			log.Println("onAccept", s.LocalAddr().String())
+
 			if err != nil {
 				log.Fatal(err)
 			}
-			go multiplexer.Multiplex(s, count)
+			go Multiplexer.Multiplex(s, count)
 		}
 	} else {
 		log.Fatal(err)

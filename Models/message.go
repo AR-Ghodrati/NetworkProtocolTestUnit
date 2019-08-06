@@ -1,4 +1,4 @@
-package models
+package Models
 
 type Message struct {
 	SequenceNumber uint64

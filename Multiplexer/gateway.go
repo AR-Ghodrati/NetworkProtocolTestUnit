@@ -1,7 +1,7 @@
-package multiplexer
+package Multiplexer
 
 import (
-	"../utils"
+	"../Utils"
 	"github.com/xtaci/kcp-go"
 	"log"
 	"math"
@@ -22,7 +22,7 @@ func Multiplex(conn *kcp.UDPSession, count uint64) {
 
 	for {
 		lengthR, err := conn.Read(buf)
-		msg := utils.Deserialize(buf[:lengthR])
+		msg := Utils.Deserialize(buf[:lengthR])
 		i := time.Now().Unix()
 
 		DiffMap[math.Abs(float64(i-msg.Milis))] = DiffMap[math.Abs(float64(i-msg.Milis))] + 1

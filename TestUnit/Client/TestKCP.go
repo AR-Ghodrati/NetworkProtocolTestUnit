@@ -1,8 +1,8 @@
 package Client
 
 import (
-	"../models"
-	"../utils"
+	"../../Models"
+	"../../Utils"
 	"crypto/sha1"
 	"github.com/xtaci/kcp-go"
 	"golang.org/x/crypto/pbkdf2"
@@ -27,8 +27,8 @@ func Run(count int) {
 	if sess, err := kcp.DialWithOptions(os.Getenv("ENDPOINT"), block, 10, 3); err == nil {
 		for i := 0; i < count; i++ {
 			data := time.Now().Unix()
-			random, _ := utils.GenerateRandomString(200)
-			_, _ = sess.Write(utils.Serialize(models.Message{SequenceNumber: uint64(i), Milis: data, Msg: random}))
+			random, _ := Utils.GenerateRandomString(200)
+			_, _ = sess.Write(Utils.Serialize(Models.Message{SequenceNumber: uint64(i), Milis: data, Msg: random}))
 			time.Sleep(time.Millisecond)
 		}
 	} else {
