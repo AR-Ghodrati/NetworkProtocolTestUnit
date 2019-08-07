@@ -1,11 +1,9 @@
 package main
 
 import (
-	"../gsm/TestUnit"
-	"log"
+	"gsm/TestUnit"
 )
 
 func main() {
-	log.Println("Running....")
-	TestUnit.RunServer()
+	TestUnit.RunClient()
 }

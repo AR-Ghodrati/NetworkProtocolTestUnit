@@ -1,8 +1,6 @@
 package TestUnit
 
-import (
-	"../TestUnit/Server"
-)
+import "gsm/TestUnit/Server"
 
 const Count = 100
 

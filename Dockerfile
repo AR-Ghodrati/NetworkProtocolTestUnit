@@ -1,27 +1,14 @@
-# We specify the base image we need for our
-# go application
-FROM golang:1.12.0-alpine3.9
-RUN apk update && apk add git && go get gopkg.in/natefinch/lumberjack.v2
-# We create an /app directory within our
-# image that will hold our application source
-# files
-RUN mkdir /app
-# We copy everything in the root directory
-# into our /app directory
-ADD . /app
+FROM golang:1.12.7-alpine3.10
 
-# We specify that we now wish to execute
-# any further commands inside our /app
-# directory
-WORKDIR /app
-# we run go build to compile the binary
-# executable of our Go program
+RUN apk update && apk add git
+
+WORKDIR /go/src/gsm
+COPY . .
 
 RUN go get -d -v ./...
-
-
-RUN go build -o main.go
+RUN go install -v ./...
+RUN go build
 
 EXPOSE 3001
-CMD ["/app/main"]
 
+CMD ["gsm"]

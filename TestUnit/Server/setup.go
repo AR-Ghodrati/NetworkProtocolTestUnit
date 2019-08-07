@@ -1,10 +1,10 @@
 package Server
 
 import (
-	"../../Multiplexer"
 	"crypto/sha1"
 	"github.com/xtaci/kcp-go"
 	"golang.org/x/crypto/pbkdf2"
+	"gsm/Multiplexer"
 	"log"
 )
 

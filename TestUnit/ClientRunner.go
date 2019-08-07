@@ -1,8 +1,8 @@
 package TestUnit
 
 import (
-	"../TestUnit/Client"
 	"github.com/joho/godotenv"
+	"gsm/TestUnit/Client"
 )
 
 func RunClient() {

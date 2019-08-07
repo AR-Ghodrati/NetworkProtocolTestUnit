@@ -1,8 +1,8 @@
 package Utils
 
 import (
-	"../Models"
 	"github.com/vmihailenco/msgpack"
+	"gsm/Models"
 )
 
 func Serialize(input Models.Message) []byte {

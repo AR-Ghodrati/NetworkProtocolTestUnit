@@ -1,11 +1,11 @@
 package Client
 
 import (
-	"../../Models"
-	"../../Utils"
 	"crypto/sha1"
 	"github.com/xtaci/kcp-go"
 	"golang.org/x/crypto/pbkdf2"
+	"gsm/Models"
+	"gsm/Utils"
 	_ "io"
 	"log"
 	"os"
