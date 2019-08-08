@@ -7,7 +7,6 @@ import (
 	"github.com/xtaci/kcp-go"
 	"gsm/Utils"
 	"log"
-	"math"
 	"os"
 	"sort"
 	"time"
@@ -108,7 +107,7 @@ func MultiplexQUIC(session quic.Session) {
 		panic(err)
 	}
 	t1 := makeTimestamp()
-	_ = os.Mkdir("Logs/"+session.LocalAddr().String(), os.ModePerm)
+	_ = os.Mkdir("Logs", os.ModePerm)
 	f, err := os.OpenFile("Logs/"+session.LocalAddr().String()+".txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal("File Not Opened!!")
@@ -119,12 +118,18 @@ func MultiplexQUIC(session quic.Session) {
 	var totalSize uint64 = 0
 
 	//map [time Diff] = Count
-	var DiffMap = make(map[float64]uint64)
+	var DiffMap = make(map[int64]uint64)
 	defer func() {
 		t2 := makeTimestamp()
 		f.WriteString(NewLine)
-		for diff, Count := range DiffMap {
-			txt := fmt.Sprintf("With %0.0f Milliseconds Different -> Count is: %d \r\n", diff, Count)
+		// Sort Result
+		keys := make([]int64, 0, len(DiffMap))
+		for k := range DiffMap {
+			keys = append(keys, k)
+		}
+		sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+		for _, k := range keys {
+			txt := fmt.Sprintf("With %d Milliseconds Different -> Count is: %d \r\n", k, DiffMap[k])
 			f.WriteString(txt)
 		}
 		log.Println("DONE")
@@ -165,7 +170,7 @@ func MultiplexQUIC(session quic.Session) {
 			totalP = msg.MaxPacketCount
 		}
 
-		DiffMap[math.Abs(float64(i-msg.Milis))] = DiffMap[math.Abs(float64(i-msg.Milis))] + 1
+		DiffMap[i-msg.Milis] = DiffMap[i-msg.Milis] + 1
 
 		if err != nil {
 			log.Fatal(err)
