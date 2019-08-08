@@ -1,11 +1,20 @@
 package Server
 
 import (
+	"context"
+	"crypto/rand"
+	"crypto/rsa"
 	"crypto/sha1"
+	"crypto/tls"
+	"crypto/x509"
+	"encoding/pem"
+	"github.com/lucas-clemente/quic-go"
 	"github.com/xtaci/kcp-go"
 	"golang.org/x/crypto/pbkdf2"
 	"gsm/Multiplexer"
 	"log"
+	"math/big"
+	"os"
 )
 
 //func Start() {
@@ -26,43 +35,42 @@ import (
 //	}
 //}
 
-func StartKCP(count uint64) {
+func StartKCP() {
 	key := pbkdf2.Key([]byte("demo pass"), []byte("demo salt"), 1024, 32, sha1.New)
 	block, _ := kcp.NewAESBlockCrypt(key)
-	if listener, err := kcp.ListenWithOptions(":3001", block, 10, 3); err == nil {
+	if listener, err := kcp.ListenWithOptions(os.Getenv("ENDPOINT"), block, 10, 3); err == nil {
 		log.Println("KCP Server:\tSUCCESS")
 
 		defer listener.Close()
 		for {
 			s, err := listener.AcceptKCP()
-			log.Println("onAccept", s.LocalAddr().String())
+			log.Println("Accept New Client With IP:", s.LocalAddr().String())
 
 			if err != nil {
 				log.Fatal(err)
 			}
-			go Multiplexer.Multiplex(s, count)
+			go Multiplexer.MultiplexKCP(s)
 		}
 	} else {
 		log.Fatal(err)
 	}
 }
 
-/*func StartQUIC() {
+func StartQUIC() {
 	listener, err := quic.ListenAddr(os.Getenv("ENDPOINT"), generateTLSConfig(), nil)
 	if err != nil {
-		//	return err
+		log.Fatal(err)
 	}
-	sess, err := listener.Accept(context.Background())
-	if err != nil {
-		//return err
+	log.Println("QUIC Server:\tSUCCESS")
+	defer listener.Close()
+	for {
+		sess, err := listener.Accept(context.Background())
+		log.Println("Accept New Client With IP:", sess.LocalAddr().String())
+		if err != nil {
+			log.Fatal(err)
+		}
+		go Multiplexer.MultiplexQUIC(sess)
 	}
-	_, err = sess.AcceptStream(context.Background())
-	if err != nil {
-		panic(err)
-	}
-	// Echo through the loggingWriter
-	//_, err = io.Copy(loggingWriter{stream}, stream)
-	//return err
 }
 
 func generateTLSConfig() *tls.Config {
@@ -87,4 +95,3 @@ func generateTLSConfig() *tls.Config {
 		NextProtos:   []string{"quic-echo-example"},
 	}
 }
-*/

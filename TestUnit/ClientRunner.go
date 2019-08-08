@@ -5,7 +5,11 @@ import (
 	"gsm/TestUnit/Client"
 )
 
-func RunClient() {
+func RunClientKCP(Count uint64) {
 	_ = godotenv.Load()
-	Client.Run(Count)
+	Client.RunKCP(Count)
+}
+func RunClientQUIC(Count uint64) {
+	_ = godotenv.Load()
+	Client.RunQUIC(Count)
 }

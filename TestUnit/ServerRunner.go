@@ -1,9 +1,15 @@
 package TestUnit
 
-import "gsm/TestUnit/Server"
+import (
+	"github.com/joho/godotenv"
+	"gsm/TestUnit/Server"
+)
 
-const Count = 100
-
-func RunServer() {
-	Server.StartKCP(Count)
+func RunServerKCP() {
+	_ = godotenv.Load()
+	Server.StartKCP()
+}
+func RunServerQUIC() {
+	_ = godotenv.Load()
+	Server.StartQUIC()
 }
