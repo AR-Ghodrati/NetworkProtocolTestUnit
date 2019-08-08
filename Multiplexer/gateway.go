@@ -108,7 +108,7 @@ func MultiplexQUIC(session quic.Session) {
 		panic(err)
 	}
 	t1 := makeTimestamp()
-	_ = os.Mkdir("Logs", os.ModePerm)
+	_ = os.Mkdir("Logs/"+session.LocalAddr().String(), os.ModePerm)
 	f, err := os.OpenFile("Logs/"+session.LocalAddr().String()+".txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal("File Not Opened!!")

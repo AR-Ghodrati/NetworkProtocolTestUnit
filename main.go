@@ -6,11 +6,14 @@ import (
 	"gsm/TestUnit"
 	"log"
 	"os"
-	"time"
 )
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Println("Select Server PORT : ")
+	line, _, _ := reader.ReadLine()
+	PORT := string(line)
 
 	fmt.Println("Select Server Type : ")
 	fmt.Println("1-QUIC")
@@ -20,17 +23,14 @@ func main() {
 		char, _, _ := reader.ReadRune()
 		switch char {
 		case '1':
-			TestUnit.RunServerQUIC()
+			TestUnit.RunServerQUIC(PORT)
 			break
 		case '2':
-			TestUnit.RunServerKCP()
+			TestUnit.RunServerKCP(PORT)
 			break
 		default:
 			log.Println("Select Valid Option")
 		}
 	}
 
-}
-func makeTimestamp() int64 {
-	return time.Now().UnixNano() / int64(time.Millisecond)
 }

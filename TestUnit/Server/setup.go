@@ -14,32 +14,13 @@ import (
 	"gsm/Multiplexer"
 	"log"
 	"math/big"
-	"os"
 )
 
-//func Start() {
-//	udpAddr, err := net.ResolveUDPAddr("udp", endpoint)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	conn, err := net.ListenUDP("udp", udpAddr)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//	log.Println("UDP Server:\tSUCCESS")
-//	defer conn.Close()
-//
-//	for{
-//	 	go Multiplexer.Multiplex(conn)
-//	}
-//}
-
-func StartKCP() {
+func StartKCP(port string) {
 	key := pbkdf2.Key([]byte("demo pass"), []byte("demo salt"), 1024, 32, sha1.New)
 	block, _ := kcp.NewAESBlockCrypt(key)
-	if listener, err := kcp.ListenWithOptions(os.Getenv("ENDPOINT"), block, 10, 3); err == nil {
-		log.Println("KCP Server:\tSUCCESS")
+	if listener, err := kcp.ListenWithOptions("localhost:"+port, block, 10, 3); err == nil {
+		log.Println("KCP Server:\tSUCCESS On " + listener.Addr().String())
 
 		defer listener.Close()
 		for {
@@ -56,12 +37,12 @@ func StartKCP() {
 	}
 }
 
-func StartQUIC() {
-	listener, err := quic.ListenAddr(os.Getenv("ENDPOINT"), generateTLSConfig(), nil)
+func StartQUIC(port string) {
+	listener, err := quic.ListenAddr("localhost:"+port, generateTLSConfig(), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("QUIC Server:\tSUCCESS")
+	log.Println("QUIC Server:\tSUCCESS On " + listener.Addr().String())
 	defer listener.Close()
 	for {
 		sess, err := listener.Accept(context.Background())
