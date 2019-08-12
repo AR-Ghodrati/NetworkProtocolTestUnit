@@ -10,6 +10,7 @@ import (
 )
 
 func RunPureTCP(address string, count uint64, packetStringSize int) {
+	log.Println(address)
 	conn, err := net.Dial("tcp", address)
 	if err != nil {
 		log.Println("ERROR", err)

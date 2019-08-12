@@ -14,7 +14,53 @@ import (
 	"gsm/Multiplexer"
 	"log"
 	"math/big"
+	"net"
+	"os"
 )
+
+func StartPureTCP(port string) {
+
+	listener, err := net.Listen("tcp", "localhost:"+port)
+	if err != nil {
+		log.Println("ERROR", err)
+		os.Exit(1)
+	}
+	log.Println("Pure TCO Server:\tSUCCESS On " + listener.Addr().String())
+
+	defer listener.Close()
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			log.Println("ERROR", err)
+			continue
+		}
+		log.Println("Accept New Client With IP:", conn.LocalAddr().String())
+		go Multiplexer.MultiplexPureTCP(conn)
+	}
+
+}
+
+func StartPureUDP(port string) {
+
+	listener, err := net.Listen("udp", "localhost:"+port)
+	if err != nil {
+		log.Println("ERROR", err)
+		os.Exit(1)
+	}
+	log.Println("Pure UDP Server:\tSUCCESS On " + listener.Addr().String())
+
+	defer listener.Close()
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			log.Println("ERROR", err)
+			continue
+		}
+		log.Println("Accept New Client With IP:", conn.LocalAddr().String())
+		go Multiplexer.MultiplexPureUDP(conn)
+	}
+
+}
 
 func StartKCP(port string) {
 	key := pbkdf2.Key([]byte("demo pass"), []byte("demo salt"), 1024, 32, sha1.New)

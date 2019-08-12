@@ -10,3 +10,11 @@ func RunServerKCP(port string) {
 func RunServerQUIC(port string) {
 	Server.StartQUIC(port)
 }
+
+func RunServerPureTCP(port string) {
+	Server.StartPureTCP(port)
+}
+
+func RunServerPureUDP(port string) {
+	Server.StartPureUDP(port)
+}
