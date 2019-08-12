@@ -8,11 +8,10 @@ import (
 	"gsm/Utils"
 	"log"
 	"net"
-	"os"
 	"time"
 )
 
-func RunKCP(count uint64) {
+func RunKCP(address string, count uint64, packetStringSize int) {
 	key := pbkdf2.Key([]byte("demo pass"), []byte("demo salt"), 1024, 32, sha1.New)
 	block, _ := kcp.NewAESBlockCrypt(key)
 
@@ -21,14 +20,14 @@ func RunKCP(count uint64) {
 	log.Println("Connecting....")
 
 	// dial to the echo server
-	if sess, err := kcp.DialWithOptions(os.Getenv("ENDPOINT"), block, 10, 3); err == nil {
+	if sess, err := kcp.DialWithOptions(address, block, 10, 3); err == nil {
 		defer func() {
 			log.Println("Send", count, "Packet DONE!!")
 		}()
 		var i uint64 = 0
 		for i = 0; i < count; i++ {
 			data := makeTimestamp()
-			random, _ := Utils.GenerateRandomString(200)
+			random, _ := Utils.GenerateRandomString(packetStringSize)
 			_, _ = sess.Write(Utils.Serialize(Models.Message{SequenceNumber: uint64(i), Milis: data, Msg: random, MaxPacketCount: count}))
 			time.Sleep(time.Microsecond)
 		}

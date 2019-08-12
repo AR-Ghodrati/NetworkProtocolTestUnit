@@ -12,11 +12,10 @@ import (
 	"gsm/Utils"
 	"log"
 	"math/big"
-	"os"
 	"time"
 )
 
-func RunQUIC(count uint64) {
+func RunQUIC(address string, count uint64, packetStringSize int) {
 
 	tlsConf := &tls.Config{
 		InsecureSkipVerify: true,
@@ -27,7 +26,7 @@ func RunQUIC(count uint64) {
 	log.Println("Connecting....")
 
 	// dial to the echo server
-	if sess, err := quic.DialAddr(os.Getenv("ENDPOINT"), tlsConf, nil); err == nil {
+	if sess, err := quic.DialAddr(address, tlsConf, nil); err == nil {
 
 		stream, err := sess.OpenStreamSync(context.Background())
 		if err != nil {
@@ -40,7 +39,7 @@ func RunQUIC(count uint64) {
 		var i uint64 = 0
 		for i = 0; i < count; i++ {
 			data := makeTimestamp()
-			random, _ := Utils.GenerateRandomString(200)
+			random, _ := Utils.GenerateRandomString(packetStringSize)
 			_, _ = stream.Write(Utils.Serialize(Models.Message{SequenceNumber: uint64(i), Milis: data, Msg: random, MaxPacketCount: count}))
 			time.Sleep(time.Microsecond)
 		}
